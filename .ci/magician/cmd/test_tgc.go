@@ -21,7 +21,7 @@ var testTGCCmd = &cobra.Command{
 		commit := os.Getenv("COMMIT_SHA")
 		pr := os.Getenv("PR_NUMBER")
 
-		gh := github.NewClient()
+		gh := github.NewGithubService()
 
 		execTestTGC(commit, pr, gh)
 	},

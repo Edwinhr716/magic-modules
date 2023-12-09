@@ -261,7 +261,6 @@ module "project-services" {
     "managedidentities.googleapis.com",
     "memcache.googleapis.com",
     "metastore.googleapis.com",
-    "migrationcenter.googleapis.com",
     "ml.googleapis.com",
     "mobilecrashreporting.googleapis.com",
     "monitoring.googleapis.com",

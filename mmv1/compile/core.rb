@@ -16,6 +16,11 @@ require 'erb'
 require 'ostruct'
 
 module Compile
+  # Unique ID for the Google libraries to be compiled/used by modules
+  module Libraries
+    NETWORK = 'network'.freeze
+  end
+
   # Helper functions to aid compiling and including files
   module Core
     def compiler

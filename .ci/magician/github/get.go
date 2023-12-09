@@ -5,35 +5,24 @@ import (
 	utils "magician/utility"
 )
 
-type User struct {
-	Login string `json:"login"`
-}
-
-type Label struct {
-	Name string `json:"name"`
-}
-
-type PullRequest struct {
-	User struct {
-		Login string `json:"login"`
-	} `json:"user"`
-	Labels []Label `json:"labels"`
-}
-
-func (gh *Client) GetPullRequest(prNumber string) (PullRequest, error) {
+func (gh *github) GetPullRequestAuthor(prNumber string) (string, error) {
 	url := fmt.Sprintf("https://api.github.com/repos/GoogleCloudPlatform/magic-modules/issues/%s", prNumber)
 
-	var pullRequest PullRequest
+	var pullRequest struct {
+		User struct {
+			Login string `json:"login"`
+		} `json:"user"`
+	}
 
 	_, err := utils.RequestCall(url, "GET", gh.token, &pullRequest, nil)
 	if err != nil {
-		return pullRequest, err
+		return "", err
 	}
 
-	return pullRequest, nil
+	return pullRequest.User.Login, nil
 }
 
-func (gh *Client) GetPullRequestRequestedReviewer(prNumber string) (string, error) {
+func (gh *github) GetPullRequestRequestedReviewer(prNumber string) (string, error) {
 	url := fmt.Sprintf("https://api.github.com/repos/GoogleCloudPlatform/magic-modules/pulls/%s/requested_reviewers", prNumber)
 
 	var requestedReviewers struct {
@@ -54,7 +43,7 @@ func (gh *Client) GetPullRequestRequestedReviewer(prNumber string) (string, erro
 	return requestedReviewers.Users[0].Login, nil
 }
 
-func (gh *Client) GetPullRequestPreviousAssignedReviewers(prNumber string) ([]string, error) {
+func (gh *github) GetPullRequestPreviousAssignedReviewers(prNumber string) ([]string, error) {
 	url := fmt.Sprintf("https://api.github.com/repos/GoogleCloudPlatform/magic-modules/pulls/%s/reviews", prNumber)
 
 	var reviews []struct {
@@ -76,6 +65,27 @@ func (gh *Client) GetPullRequestPreviousAssignedReviewers(prNumber string) ([]st
 	result := []string{}
 	for key := range previousAssignedReviewers {
 		result = append(result, key)
+	}
+
+	return result, nil
+}
+
+func (gh *github) GetPullRequestLabelIDs(prNumber string) (map[int]struct{}, error) {
+	url := fmt.Sprintf("https://api.github.com/repos/GoogleCloudPlatform/magic-modules/pulls/%s/reviews", prNumber)
+
+	var labels []struct {
+		Label struct {
+			ID int `json:"id"`
+		} `json:"label"`
+	}
+
+	if _, err := utils.RequestCall(url, "GET", gh.token, &labels, nil); err != nil {
+		return nil, err
+	}
+
+	var result map[int]struct{}
+	for _, label := range labels {
+		result[label.Label.ID] = struct{}{}
 	}
 
 	return result, nil

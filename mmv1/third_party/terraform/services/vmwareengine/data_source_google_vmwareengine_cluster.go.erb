@@ -1,5 +1,6 @@
+<% autogen_exception -%>
 package vmwareengine
-
+<% unless version == 'ga' -%>
 import (
 	"fmt"
 
@@ -8,25 +9,26 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google/google/transport"
 )
 
-func DataSourceVmwareengineSubnet() *schema.Resource {
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceVmwareengineSubnet().Schema)
+func DataSourceVmwareengineCluster() *schema.Resource {
+
+	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceVmwareengineCluster().Schema)
 	tpgresource.AddRequiredFieldsToSchema(dsSchema, "parent", "name")
 	return &schema.Resource{
-		Read:   dataSourceVmwareengineSubnetRead,
+		Read:   dataSourceVmwareengineClusterRead,
 		Schema: dsSchema,
 	}
 }
 
-func dataSourceVmwareengineSubnetRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceVmwareengineClusterRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/subnets/{{name}}")
+	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/clusters/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
-	err = resourceVmwareengineSubnetRead(d, meta)
+	err = resourceVmwareengineClusterRead(d, meta)
 	if err != nil {
 		return err
 	}
@@ -36,3 +38,4 @@ func dataSourceVmwareengineSubnetRead(d *schema.ResourceData, meta interface{}) 
 	}
 	return nil
 }
+<% end -%>

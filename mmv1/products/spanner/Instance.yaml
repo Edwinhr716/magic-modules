@@ -64,12 +64,6 @@ examples:
       # Randomness
     skip_vcr: true
   - !ruby/object:Provider::Terraform::Examples
-    name: 'spanner_instance_with_autoscaling'
-    primary_resource_id:
-      'example'
-      # Randomness
-    skip_vcr: true
-  - !ruby/object:Provider::Terraform::Examples
     name: 'spanner_instance_multi_regional'
     primary_resource_id:
       'example'

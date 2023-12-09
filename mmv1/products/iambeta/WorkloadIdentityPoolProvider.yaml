@@ -54,18 +54,6 @@ examples:
       workload_identity_pool_id: 'example-pool'
       workload_identity_pool_provider_id: 'example-prvdr'
   - !ruby/object:Provider::Terraform::Examples
-    name: 'iam_workload_identity_pool_provider_saml_basic'
-    primary_resource_id: 'example'
-    vars:
-      workload_identity_pool_id: 'example-pool'
-      workload_identity_pool_provider_id: 'example-prvdr'
-  - !ruby/object:Provider::Terraform::Examples
-    name: 'iam_workload_identity_pool_provider_saml_full'
-    primary_resource_id: 'example'
-    vars:
-      workload_identity_pool_id: 'example-pool'
-      workload_identity_pool_provider_id: 'example-prvdr'
-  - !ruby/object:Provider::Terraform::Examples
     name: 'iam_workload_identity_pool_provider_oidc_upload_key'
     primary_resource_id: 'example'
     vars:
@@ -217,11 +205,10 @@ properties:
     name: aws
     description:
       An Amazon Web Services identity provider. Not compatible with the property
-      oidc or saml.
+      oidc.
     exactly_one_of:
       - aws
       - oidc
-      - saml
     properties:
       - !ruby/object:Api::Type::String
         name: accountId
@@ -231,11 +218,10 @@ properties:
     name: oidc
     description:
       An OpenId Connect 1.0 identity provider. Not compatible with the property
-      aws or saml.
+      aws.
     exactly_one_of:
       - aws
       - oidc
-      - saml
     update_mask_fields:
       - 'oidc.allowed_audiences'
       - 'oidc.issuer_uri'
@@ -288,17 +274,3 @@ properties:
           }
           ```
         required: false
-  - !ruby/object:Api::Type::NestedObject
-    name: saml
-    description:
-      An SAML 2.0 identity provider. Not compatible with the property
-      oidc or aws.
-    exactly_one_of:
-      - aws
-      - oidc
-      - saml
-    properties:
-      - !ruby/object:Api::Type::String
-        name: idpMetadataXml
-        description: SAML Identity provider configuration metadata xml doc.
-        required: true

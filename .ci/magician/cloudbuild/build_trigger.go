@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"os"
 
-	cloudbuildv1 "google.golang.org/api/cloudbuild/v1"
+	"google.golang.org/api/cloudbuild/v1"
 )
 
-func (cb *Client) TriggerMMPresubmitRuns(commitSha string, substitutions map[string]string) error {
+func (cb cloudBuild) TriggerMMPresubmitRuns(commitSha string, substitutions map[string]string) error {
 	presubmitTriggerId, ok := os.LookupEnv("GENERATE_DIFFS_TRIGGER")
 	if !ok {
 		return fmt.Errorf("did not provide GENERATE_DIFFS_TRIGGER environment variable")
@@ -24,12 +24,12 @@ func (cb *Client) TriggerMMPresubmitRuns(commitSha string, substitutions map[str
 
 func triggerCloudBuildRun(projectId, triggerId, repoName, commitSha string, substitutions map[string]string) error {
 	ctx := context.Background()
-	c, err := cloudbuildv1.NewService(ctx)
+	c, err := cloudbuild.NewService(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to create Cloud Build service client: %s", err)
 	}
 
-	repoSource := &cloudbuildv1.RepoSource{
+	repoSource := &cloudbuild.RepoSource{
 		ProjectId:     projectId,
 		RepoName:      repoName,
 		CommitSha:     commitSha,

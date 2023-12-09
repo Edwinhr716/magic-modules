@@ -9,11 +9,7 @@ import (
 
 func TestExecMembershipChecker_CoreContributorFlow(t *testing.T) {
 	gh := &mockGithub{
-		pullRequest: github.PullRequest{
-			User: github.User{
-				Login: "core_author",
-			},
-		},
+		author:        "core_author",
 		userType:      github.CoreContributorUserType,
 		calledMethods: make(map[string][][]any),
 	}
@@ -47,11 +43,7 @@ func TestExecMembershipChecker_CoreContributorFlow(t *testing.T) {
 
 func TestExecMembershipChecker_GooglerFlow(t *testing.T) {
 	gh := &mockGithub{
-		pullRequest: github.PullRequest{
-			User: github.User{
-				Login: "googler_author",
-			},
-		},
+		author:            "googler_author",
 		userType:          github.GooglerUserType,
 		calledMethods:     make(map[string][][]any),
 		firstReviewer:     "reviewer1",
@@ -95,11 +87,7 @@ func TestExecMembershipChecker_GooglerFlow(t *testing.T) {
 
 func TestExecMembershipChecker_AmbiguousUserFlow(t *testing.T) {
 	gh := &mockGithub{
-		pullRequest: github.PullRequest{
-			User: github.User{
-				Login: "ambiguous_author",
-			},
-		},
+		author:            "ambiguous_author",
 		userType:          github.CommunityUserType,
 		calledMethods:     make(map[string][][]any),
 		firstReviewer:     github.GetRandomReviewer(),
@@ -151,11 +139,7 @@ func TestExecMembershipChecker_AmbiguousUserFlow(t *testing.T) {
 
 func TestExecMembershipChecker_CommentForNewPrimaryReviewer(t *testing.T) {
 	gh := &mockGithub{
-		pullRequest: github.PullRequest{
-			User: github.User{
-				Login: "googler_author",
-			},
-		},
+		author:            "googler_author",
 		userType:          github.GooglerUserType,
 		calledMethods:     make(map[string][][]any),
 		firstReviewer:     "",
